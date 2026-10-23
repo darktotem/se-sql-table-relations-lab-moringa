@@ -3,6 +3,7 @@
 # SQL Library and Pandas Library
 import sqlite3
 import pandas as pd
+print(pd.__version__)
 
 # Connect to the database
 conn = sqlite3.connect('data.sqlite')
@@ -13,10 +14,11 @@ pd.read_sql("""SELECT * FROM sqlite_master""", conn)
 # Replace None with your code
 
 df_boston = pd.read_sql("""
-SELECT e.firstName, e.lastName, e.jobTitle
+SELECT e.firstName, e.lastName
 FROM employees e
 JOIN offices o ON e.officeCode = o.officeCode
-WHERE o.city = 'Boston';
+WHERE o.city = 'Boston'
+ORDER BY e.firstName;
 """, conn)
 
 
@@ -44,7 +46,8 @@ df_contacts = pd.read_sql("""
 SELECT c.contactFirstName, c.contactLastName, c.phone, c.salesRepEmployeeNumber
 FROM customers c
 LEFT JOIN orders o ON c.customerNumber = o.customerNumber
-WHERE o.orderNumber IS NULL;
+WHERE o.orderNumber IS NULL
+ORDER BY c.contactLastName;
 """, conn)
 
 # STEP 5
@@ -118,7 +121,8 @@ WHERE od.productCode IN (
     JOIN orders o2 ON od2.orderNumber = o2.orderNumber
     GROUP BY od2.productCode
     HAVING COUNT(DISTINCT o2.customerNumber) < 20
-);
+)
+ORDER BY e.employeeNumber;
 """, conn)
 
 conn.close()
